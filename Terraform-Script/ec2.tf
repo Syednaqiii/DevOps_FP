@@ -35,7 +35,7 @@ resource "aws_instance" "web" {
   }
   provisioner "local-exec" {
       command = <<EOT
-      ansible-playbook -i ./Inventory-Ansible/inventory.ini ./Ansible-Playbook/playbook.yaml
+       ansible-playbook -i $GITHUB_WORKSPACE/Inventory-Ansible/inventory.ini $GITHUB_WORKSPACE/Ansible-Playbook/playbook.yaml
     EOT
    }
 }
