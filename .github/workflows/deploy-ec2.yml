@@ -39,11 +39,11 @@ jobs:
         echo "region = $AWS_REGION" >> ~/.aws/config
 
     - name: Initialize Terraform
-      working-directory: ./Terraform-script
+      working-directory: ./Terraform-Script
       run: terraform init
 
     - name: Apply Terraform
-      working-directory: ./Terraform-script
+      working-directory: ./Terraform-Script
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -54,7 +54,7 @@ jobs:
       run: sleep 600
 
     - name: Destroy Terraform
-      working-directory: ./Terraform-script
+      working-directory: ./Terraform-Script
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
