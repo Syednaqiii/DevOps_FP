@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+    
 
 jobs:
   deploy:
@@ -21,7 +22,7 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
       with:
-        terraform_version: 1.9.1 # Use the version that matches your setup
+        terraform_version: 1.9.1 
 
     - name: Create AWS Credentials Directory
       run: mkdir -p ~/.aws
