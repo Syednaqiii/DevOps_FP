@@ -1,1 +1,22 @@
+---
+- name: Configure EC2 instance with Docker and Docker Compose
+  hosts: ec2_instances
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install necessary packages
+      apt:
+        name:
+          - docker.io
+          - docker-compose
+        state: present
+
+    - name: Start Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
 
