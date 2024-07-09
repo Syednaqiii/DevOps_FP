@@ -41,4 +41,3 @@ resource "aws_instance" "web" {
     EOT
   }
 }
-}
