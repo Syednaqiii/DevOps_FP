@@ -1,70 +1,4 @@
-# name: Deploy and Destroy EC2
-
-# on:
-#   push:
-#     branches:
-#       - main
-# permissions:
-#       id-token:write
-#       contents:read
-      
-
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest 
-
-#     steps:
-#     - name: Checkout repository
-#       uses: actions/checkout@v3
-
-#     - name: Setup Node.js
-#       uses: actions/setup-node@v3
-#       with:
-#         node-version: 22
-
-#     - name: Setup Terraform
-#       uses: hashicorp/setup-terraform@v2
-#       with:
-#         terraform_version: 1.9.1 
-
-#     - name: Create AWS Credentials Directory
-#       run: mkdir -p ~/.aws
-
-#     - name: Setup AWS Credentials
-#       env:
-#         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#         AWS_REGION: ${{ secrets.AWS_REGION }}
-#       run: |
-#         echo "[default]" > ~/.aws/credentials
-#         echo "aws_access_key_id = $AWS_ACCESS_KEY_ID" >> ~/.aws/credentials
-#         echo "aws_secret_access_key = $AWS_SECRET_ACCESS_KEY" >> ~/.aws/credentials
-#         echo "[default]" > ~/.aws/config
-#         echo "region = $AWS_REGION" >> ~/.aws/config
-
-#     - name: Initialize Terraform
-#       working-directory: ./Terraform-Script
-#       run: terraform init
-
-#     - name: Apply Terraform
-#       working-directory: ./Terraform-Script
-#       env:
-#         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#         AWS_REGION: ${{ secrets.AWS_REGION }}
-#       run: terraform apply -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var "aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -auto-approve
-
-#     - name: Wait for 10 minutes
-#       run: sleep 600
-
-#     - name: Destroy Terraform
-#       working-directory: ./Terraform-Script
-#       env:
-#         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#         AWS_REGION: ${{ secrets.AWS_REGION }}
-#       run: terraform destroy -var "aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var "aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" -var "key_name=DevOps-FP" -auto-approve
-name: "Terraform action"
+name: "Deploy and configure ec2 Instance"
 on:
   push:
     branches:
@@ -125,43 +59,6 @@ jobs:
         working-directory: ./Terraform-Script
         run: terraform plan 
 
-      # - uses: actions/github-script@v6
-      #   if: github.event_name == 'push'
-      #   env:
-      #     PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-      #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     script: |
-      #       const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-      #       #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-      #       #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-      #       <details><summary>Validation Output</summary>
-
-      #       \`\`\`\n
-      #       ${{ steps.validate.outputs.stdout }}
-      #       \`\`\`
-
-      #       </details>
-
-      #       #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-
-      #       <details><summary>Show Plan</summary>
-
-      #       \`\`\`\n
-      #       ${process.env.PLAN}
-      #       \`\`\`
-
-      #       </details>
-
-      #       *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-
-      #       github.rest.issues.createComment({
-      #         issue_number: context.issue.number,
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         body: output
-      #       })
-
       - name: Terraform Plan Status
         if: steps.plan.outcome == 'failure'
         run: exit 1
@@ -171,8 +68,8 @@ jobs:
         working-directory: ./Terraform-Script
         run: terraform apply -auto-approve -input=false
 
-      # - name: Wait for 1 minute
-      #   run: sleep 60
+      - name: Wait for 1 minute
+        run: sleep 60
 
       - name: Destroy Terraform
         working-directory: ./Terraform-Script
