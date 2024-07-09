@@ -171,7 +171,7 @@ jobs:
         working-directory: ./Terraform-Script
         run: terraform apply -auto-approve -input=false
 
-      - name: Wait for 1 minute
+      - name: Wait for 1 minutes
         run: sleep 60
 
       - name: Destroy Terraform
