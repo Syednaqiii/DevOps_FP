@@ -33,4 +33,8 @@ resource "aws_instance" "web" {
   tags = {
     Name = "web-server"
   }
+  provisioner "local-exec" {
+      command = <<EOT
+      ansible-playbook -i ./Inventory-Ansible/inventory.ini ./Ansible-Playbook/playbook.yaml
+    EOT
 }
