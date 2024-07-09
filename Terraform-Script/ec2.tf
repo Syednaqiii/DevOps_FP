@@ -37,4 +37,5 @@ resource "aws_instance" "web" {
       command = <<EOT
       ansible-playbook -i ./Inventory-Ansible/inventory.ini ./Ansible-Playbook/playbook.yaml
     EOT
+   }
 }
