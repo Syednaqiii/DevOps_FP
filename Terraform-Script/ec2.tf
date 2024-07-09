@@ -35,8 +35,6 @@ resource "aws_instance" "web" {
   }
   provisioner "local-exec" {
     command = <<EOT
-      echo "[ec2_instances]" > $GITHUB_WORKSPACE/Inventory-Ansible/inventory.ini
-      echo "$(aws ec2 describe-instances --instance-ids ${self.id} --query 'Reservations[0].Instances[0].PublicIpAddress' --output text) ansible_user=ubuntu ansible_ssh_private_key_file=DevOps-FP" >> $GITHUB_WORKSPACE/Inventory-Ansible/inventory.ini
       ansible-playbook -i $GITHUB_WORKSPACE/Inventory-Ansible/inventory.ini $GITHUB_WORKSPACE/Ansible-Playbook/playbook.yaml
     EOT
   }
