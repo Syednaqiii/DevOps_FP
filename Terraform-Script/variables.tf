@@ -63,5 +63,5 @@ variable "aws_access_key" {
 variable "aws_secret_key" {
   description = "The AWS secret key"
   type        = string
-  default     = "" # Leave empty, will be set via environment variables
+  default     = "DevOps-FP" # Leave empty, will be set via environment variables
 }
