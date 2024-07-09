@@ -53,6 +53,7 @@ variable "allowed_ssh_cidr" {
 variable "key_name" {
   description = "The name of the SSH key pair to use"
   type        = string
+  default     = "DevOps-FP"
 }
 variable "aws_access_key" {
   description = "The AWS access key"
@@ -63,5 +64,5 @@ variable "aws_access_key" {
 variable "aws_secret_key" {
   description = "The AWS secret key"
   type        = string
-  default     = "DevOps-FP" # Leave empty, will be set via environment variables
+  default     = "" # Leave empty, will be set via environment variables
 }
