@@ -64,11 +64,6 @@ jobs:
         if: steps.plan.outcome == 'failure'
         run: exit 1
 
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        working-directory: ./Terraform-Script
-        run: terraform apply -auto-approve -input=false
-        
       - name: Install Python3 and pip
         run: |
           sudo apt-get update
@@ -76,8 +71,16 @@ jobs:
 
       - name: Create private key file
         run: |
-           echo "${{ secrets.AWS_SECRET_PRIV_KEY }}" > ./devOps-KP.pem
-           chmod 400 ./devOps-KP.pem  
+        working-directory: ./Terraform-Script
+           echo "${{ secrets.AWS_SECRET_PRIV_KEY }}" > devOps-KP.pem
+           chmod 400 devOps-KP.pem  
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        working-directory: ./Terraform-Script
+        run: terraform apply -auto-approve -input=false
+        
+      
 
       # - name: Run Ansible playbook with Inventory
       #   run: |
