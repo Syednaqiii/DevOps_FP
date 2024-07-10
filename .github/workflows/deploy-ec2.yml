@@ -64,24 +64,24 @@ jobs:
         if: steps.plan.outcome == 'failure'
         run: exit 1
 
-      # - name: Terraform Apply
-      #   if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      #   working-directory: ./Terraform-Script
-      #   run: terraform apply -auto-approve -input=false
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        working-directory: ./Terraform-Script
+        run: terraform apply -auto-approve -input=false
         
-      # - name: Install Python and Boto3
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y python3 python3-pip
-      #     pip3 install boto3
+      - name: Install Python and Boto3
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip
+          pip3 install boto3
 
-      # - name: Run Ansible playbook with Dynamic Inventory
-      #   run: |
-      #     chmod +x ./Inventory-Ansible/ec2.py
-      #     ansible-playbook -i ./Inventory-Ansible/ec2.py ./Ansible-Playbook/playbook.yaml
+      - name: Run Ansible playbook with Dynamic Inventory
+        run: |
+          chmod +x ./Inventory-Ansible/ec2.py
+          ansible-playbook -i ./Inventory-Ansible/ec2.py ./Ansible-Playbook/playbook.yaml
           
-      # - name: Wait for 1 minute
-      #   run: sleep 120
+      - name: Wait for 1 minute
+        run: sleep 120
 
       - name: Destroy Terraform
         working-directory: ./Terraform-Script
