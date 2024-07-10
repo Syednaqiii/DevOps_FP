@@ -24,7 +24,7 @@ resource "aws_instance" "web" {
   ami           = var.ami_id
   instance_type = var.instance_type
   subnet_id     = aws_subnet.public_a.id
-  key_name      = "DevOps-FP"
+  key_name      = "devOps-KP"
 
   vpc_security_group_ids = [
     aws_security_group.ec2_sg.id,
