@@ -72,7 +72,10 @@ jobs:
       - name: Output EC2 Public IP
         id: output
         working-directory: ./Terraform-Script
-        run: echo "EC2_PUBLIC_IP=$(terraform output -raw ec2_public_ip)" >> $GITHUB_ENV
+        run: |
+          sudo apt-get install -y jq
+          EC2_PUBLIC_IP=$(terraform output -json | jq -r .ec2_public_ip.value)
+          echo "EC2_PUBLIC_IP=$EC2_PUBLIC_IP" >> $GITHUB_ENV
 
       - name: Install Python and Boto3
         run: |
