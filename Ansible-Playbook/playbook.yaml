@@ -17,6 +17,7 @@
           - docker.io
           - python3
           - python3-pip
+          - python3-venv
         state: present
         update_cache: yes
 
@@ -36,9 +37,13 @@
         name: pm2
         global: yes
 
-    - name: Install Python Docker SDK
-      pip:
-        name: docker==5.0.3
+    - name: Create a virtual environment for Python
+      shell: python3 -m venv /home/ubuntu/venv
+
+    - name: Install Docker SDK in virtual environment
+      shell: |
+        source /home/ubuntu/venv/bin/activate
+        pip install docker==5.0.3
 
     - name: Check Docker version
       command: docker --version
