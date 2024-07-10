@@ -1,5 +1,5 @@
 ---
-- name: Configure EC2 instance with Docker, Docker Compose, Node.js, and Python
+- name: Configure EC2 instance with Docker, Docker Compose, Node.js, npm, Python 3, and pip
   hosts: ec2_instances
   become: yes
   tasks:
@@ -12,14 +12,13 @@
         curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
         sudo apt-get install -y nodejs
 
-    - name: Install necessary packages including Docker and Python
+    - name: Install necessary packages including Docker, Docker Compose, Python 3, and pip
       apt:
         name:
           - docker.io
           - docker-compose
           - python3
           - python3-pip
-          - clients
         state: present
 
     - name: Start Docker service
