@@ -77,8 +77,8 @@ jobs:
 
       - name: Run Ansible playbook with Dynamic Inventory
         run: |
-          chmod +x ./Ansible-Inventory/ec2.py
-          ansible-playbook -i ./Ansible-Inventory/ec2.py ./Ansible-Playbook/playbook.yaml
+          chmod +x ./Inventory-Ansible/ec2.py
+          ansible-playbook -i ./Inventory-Ansible/ec2.py ./Ansible-Playbook/playbook.yaml
           
       - name: Wait for 1 minute
         run: sleep 120
