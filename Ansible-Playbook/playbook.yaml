@@ -7,15 +7,18 @@
       apt:
         update_cache: yes
 
-    - name: Install necessary packages
+    - name: Install Node.js and npm using NodeSource
+      shell: |
+        curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+        sudo apt-get install -y nodejs
+
+    - name: Install necessary packages including Docker and Python
       apt:
         name:
           - docker.io
           - docker-compose
-          - nodejs
-          - npm
           - python3
-          - python3-pip  # Optional: Install pip for Python packages
+          - python3-pip
         state: present
 
     - name: Start Docker service
@@ -24,28 +27,7 @@
         state: started
         enabled: yes
 
-    - name: Install Node.js and npm
-      shell: |
-        curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-        sudo apt-get install -y nodejs
-
-    - name: Verify Node.js installation
-      command: node -v
-      register: node_version
-
-    - name: Verify npm installation
-      command: npm -v
-      register: npm_version
-
-    - name: Print Node.js version
-      debug:
-        msg: "Node.js version: {{ node_version.stdout }}"
-
-    - name: Print npm version
-      debug:
-        msg: "npm version: {{ npm_version.stdout }}"
-
-    - name: Install necessary npm packages globally
+    - name: Install npm packages globally
       npm:
         name: pm2
         global: yes
