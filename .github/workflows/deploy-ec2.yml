@@ -88,7 +88,7 @@ jobs:
       - name: Create private key file
         run: |
            echo "${{ secrets.AWS_SECRET_PRIV_KEY }}" > ./devOps-KP.pem
-           chmod 600 ./devOps-KP.pem  
+           chmod 400 ./devOps-KP.pem  
 
       - name: Run Ansible playbook with Inventory
         run: |
