@@ -81,7 +81,7 @@ jobs:
       #     ansible-playbook -i ./Inventory-Ansible/ec2.py ./Ansible-Playbook/playbook.yaml
           
       - name: Wait for 1 minute
-        run: sleep 300
+        run: sleep 360
 
       - name: Destroy Terraform
         working-directory: ./Terraform-Script
