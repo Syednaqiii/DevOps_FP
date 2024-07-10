@@ -45,3 +45,12 @@
       npm:
         name: pm2
         global: yes
+    - name: Copy Docker Compose file
+      copy:
+        src: ./docker-compose.yaml
+        dest: /home/ubuntu/docker-compose.yaml
+
+    - name: Bring up Docker Compose services
+      shell: |
+        cd /home/ubuntu
+        docker-compose up -d
