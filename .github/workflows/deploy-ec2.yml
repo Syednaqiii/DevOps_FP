@@ -69,16 +69,31 @@ jobs:
         working-directory: ./Terraform-Script
         run: terraform apply -auto-approve -input=false
         
+      - name: Extract EC2 Public IP
+        id: extract-ip
+        working-directory: ./Terraform-Script
+        run: |
+          instance_id=$(terraform output -raw instance_id)
+          echo "Instance ID: $instance_id"
+          instance_ip=$(aws ec2 describe-instances --instance-ids $instance_id --query "Reservations[0].Instances[0].PublicIpAddress" --output text)
+          echo "Instance IP: $instance_ip"
+          echo "instance_ip=$instance_ip" >> $GITHUB_ENV
+
       - name: Install Python and Boto3
         run: |
           sudo apt-get update
           sudo apt-get install -y python3 python3-pip
           pip3 install boto3
 
+      - name: Create Ansible Inventory
+        run: |
+          echo "[ec2_instances]" > ./Inventory-Ansible/inventory.ini
+          echo "$instance_ip ansible_user=ubuntu ansible_ssh_private_key_file=/path/to/DevOps-FP.pem" >> ./Inventory-Ansible/inventory.ini
+
       - name: Run Ansible playbook with Dynamic Inventory
         run: |
           chmod +x ./Inventory-Ansible/ec2.py
-          ansible-playbook -i ./Inventory-Ansible/ec2.py ./Ansible-Playbook/playbook.yaml
+          ansible-playbook -i ./Inventory-Ansible/inventory.ini ./Ansible-Playbook/playbook.yaml
           
       - name: Wait for 1 minute
         run: sleep 360
