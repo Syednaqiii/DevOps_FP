@@ -1,5 +1,5 @@
 ---
-- name: Configure EC2 instance with Docker, Docker Compose, and Node.js
+- name: Configure EC2 instance with Docker, Docker Compose, Node.js, and Python
   hosts: ec2_instances
   become: yes
   tasks:
@@ -12,6 +12,10 @@
         name:
           - docker.io
           - docker-compose
+          - nodejs
+          - npm
+          - python3
+          - python3-pip  # Optional: Install pip for Python packages
         state: present
 
     - name: Start Docker service
@@ -45,6 +49,7 @@
       npm:
         name: pm2
         global: yes
+
     - name: Copy Docker Compose file
       copy:
         src: ./docker-compose.yaml
