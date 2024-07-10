@@ -83,12 +83,12 @@ jobs:
         
       
 
-      # - name: Run Ansible playbook with Inventory
-      #   run: |
-      #         ansible-playbook -i ./Inventory-Ansible/inventory.ini ./Ansible-Playbook/playbook.yaml
-      #   env:
-      #         ANSIBLE_PRIVATE_KEY_FILE: ./devOps-KP.pem
-      #         ANSIBLE_HOST_KEY_CHECKING: False
+      - name: Run Ansible playbook with Inventory
+        run: |
+              ansible-playbook -i ./Inventory-Ansible/inventory.ini ./Ansible-Playbook/playbook.yaml
+        env:
+              ANSIBLE_PRIVATE_KEY_FILE: ./devOps-KP.pem
+              ANSIBLE_HOST_KEY_CHECKING: False
           
       # - name: Wait for 1 minute
       #   run: sleep 360
