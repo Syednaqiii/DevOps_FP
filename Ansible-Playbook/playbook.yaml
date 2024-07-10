@@ -1,5 +1,5 @@
 ---
-- name: Configure EC2 instance with Docker and Docker Compose
+- name: Configure EC2 instance with Docker, Docker Compose, and Node.js
   hosts: ec2_instances
   become: yes
   tasks:
@@ -20,3 +20,28 @@
         state: started
         enabled: yes
 
+    - name: Install Node.js and npm
+      shell: |
+        curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+        sudo apt-get install -y nodejs
+
+    - name: Verify Node.js installation
+      command: node -v
+      register: node_version
+
+    - name: Verify npm installation
+      command: npm -v
+      register: npm_version
+
+    - name: Print Node.js version
+      debug:
+        msg: "Node.js version: {{ node_version.stdout }}"
+
+    - name: Print npm version
+      debug:
+        msg: "npm version: {{ npm_version.stdout }}"
+
+    - name: Install necessary npm packages globally
+      npm:
+        name: pm2
+        global: yes
