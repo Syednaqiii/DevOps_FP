@@ -11,10 +11,11 @@ def get_ec2_instances():
     inventory = {'all': {'hosts': []}}
 
     for instance in instances:
-        inventory['all']['hosts'].append(instance.public_dns_name)
+        if instance.public_dns_name:
+            inventory['all']['hosts'].append(instance.public_dns_name)
     
     return inventory
 
-if __name == "__main__":
+if __name__ == "__main__":
     inventory = get_ec2_instances()
     print(json.dumps(inventory, indent=2))
