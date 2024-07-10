@@ -85,11 +85,17 @@ jobs:
       #     echo "[ec2_instances]" > ./Inventory-Ansible/inventory.ini
       #     echo "$EC2_PUBLIC_IP ansible_user=ubuntu ansible_ssh_private_key_file=DevOps-FP.pem" >> ./Inventory-Ansible/inventory.ini
 
+      - name: Create private key file
+        run: |
+           echo "${{ secrets.AWS_SECRET_PRIV_KEY }}" > ./devOps-KP.pem
+           chmod 600 ./devOps-KP.pem  
+
       - name: Run Ansible playbook with Inventory
-        run: ansible-playbook -i ./Inventory-Ansible/inventory.ini ./Ansible-Playbook/playbook.yaml
+        run: |
+              ansible-playbook -i ./Inventory-Ansible/inventory.ini ./Ansible-Playbook/playbook.yaml
         env:
-            ANSIBLE_PRIVATE_KEY: ${{ secrets.AWS_SECRET_PRIV_KEY}}
-            ANSIBLE_HOST_KEY_CHECKING: False
+              ANSIBLE_PRIVATE_KEY_FILE: ./devOps-KP.pem
+              ANSIBLE_HOST_KEY_CHECKING: False
           
       # - name: Wait for 1 minute
       #   run: sleep 360
