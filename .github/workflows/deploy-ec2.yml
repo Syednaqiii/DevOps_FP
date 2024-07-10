@@ -70,10 +70,11 @@ jobs:
           sudo apt-get install -y python3 python3-pip
 
       - name: Create private key file
-        run: |
         working-directory: ./Terraform-Script
-           echo "${{ secrets.AWS_SECRET_PRIV_KEY }}" > devOps-KP.pem
-           chmod 400 devOps-KP.pem  
+        run: |
+          echo "${{ secrets.AWS_SECRET_PRIV_KEY }}" > devOps-KP.pem
+          chmod 400 devOps-KP.pem
+
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
