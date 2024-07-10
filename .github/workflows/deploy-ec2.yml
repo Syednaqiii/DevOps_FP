@@ -69,13 +69,10 @@ jobs:
         working-directory: ./Terraform-Script
         run: terraform apply -auto-approve -input=false
         
-      - name: Output EC2 Public IP
+      - name: Capture Terraform Output
         id: output
+        run: echo "::set-output name=ec2_public_ip::$(terraform output -raw ec2_public_ip)"
         working-directory: ./Terraform-Script
-        run: |
-          sudo apt-get install -y jq
-          EC2_PUBLIC_IP=$(terraform output -json ec2_public_ip | jq -r .)
-          echo "EC2_PUBLIC_IP=$EC2_PUBLIC_IP" >> $GITHUB_ENV
 
       - name: Install Python and Boto3
         run: |
