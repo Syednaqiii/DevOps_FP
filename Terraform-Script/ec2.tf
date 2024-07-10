@@ -37,9 +37,9 @@ resource "aws_instance" "web" {
     command = <<EOT
       cd ..
       ls
-      echo "[ec2_instances]" > Inventory-Ansible/inventory.ini
-      echo "${aws_instance.web.public_ip} ansible_user=ubuntu ansible_ssh_private_key_file=./devOps-KP.pem" >>  Inventory-Ansible/inventory.ini
-      ansible-playbook -i Inventory-Ansible/inventory.ini Inventory-Ansible/playbook.yaml
+      echo "[ec2_instances]" > inventory.ini
+      echo "${aws_instance.web.public_ip} ansible_user=ubuntu ansible_ssh_private_key_file=./devOps-KP.pem" >>  inventory.ini
+      ansible-playbook -i inventory.ini playbook.yaml
     EOT
   }
 }
