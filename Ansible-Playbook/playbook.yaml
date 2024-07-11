@@ -2,37 +2,78 @@
 - name: Configure EC2 instance with Docker, Docker Compose, Node.js, npm, Python 3, and pip
   hosts: ec2_instances
   become: yes
+  gather_facts: false
   tasks:
-    - name: Update apt cache
+    - name: Install docker packages
+      remote_user: ubuntu
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      with_items:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+      tags:
+        - docker
+
+    - name: Add Docker's official GPG key
+      remote_user: ubuntu
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+      tags:
+        - docker
+
+    - name: Verify that we have the key with the fingerprint
+      remote_user: ubuntu
+      apt_key:
+        id: 0EBFCD88
+        state: present
+      tags:
+        - docker
+
+    - name: Set up the stable repository
+      remote_user: ubuntu
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+        state: present
+        update_cache: yes
+      tags:
+        - docker
+
+    - name: Update apt packages
+      remote_user: ubuntu
       apt:
         update_cache: yes
+      tags:
+        - docker
 
-    - name: Install Node.js and npm using NodeSource
-      shell: |
-        curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-        sudo apt-get install -y nodejs
-
-    - name: Install necessary packages including Docker, Docker Compose, Python 3, pip, and venv
+    - name: Install docker
+      remote_user: ubuntu
       apt:
-        name:
-          - docker.io
-          - docker-compose
-          - python3
-          - python3-pip
-          - python3-venv  # Ensure python3-venv package is installed
+        name: docker-ce
         state: present
+        update_cache: yes
+      tags:
+        - docker
 
-    - name: Create Python virtual environment
-      ansible.builtin.command:
-        cmd: python3 -m venv /home/ubuntu/myenv
-        creates: /home/ubuntu/myenv/bin/activate
+    - name: Add remote "ubuntu" user to "docker" group
+      remote_user: ubuntu
+      user:
+        name: "ubuntu"
+        group: "docker"
+        append: yes
+      tags:
+        - docker
 
-    - name: Activate the virtual environment and install urllib3
-      ansible.builtin.shell:
-        cmd: |
-          /home/ubuntu/myenv/bin/pip install urllib3==1.26.15
-        executable: /bin/bash
-        creates: /home/ubuntu/myenv/lib/python3.12/site-packages/urllib3-1.26.15.dist-info
+    - name: Install docker-compose
+      remote_user: ubuntu
+      get_url: 
+        url: https://github.com/docker/compose/releases/download/1.25.1-rc1/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: 'u+x,g+x'
 
     - name: Start Docker service
       systemd:
@@ -54,3 +95,4 @@
       shell: |
         cd /home/ubuntu
         docker-compose up -d
+     
