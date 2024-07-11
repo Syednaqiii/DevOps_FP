@@ -20,6 +20,8 @@ services:
       - sonar.jdbc.username=sonar
       - sonar.jdbc.password=sonar
       - sonar.jdbc.url=jdbc:postgresql://db:5432/sonar
+      - sonar.web.javaAdditionalOpts=-Djava.net.preferIPv4Stack=true
+      - sonar.search.javaAdditionalOpts=-Xms512m -Xmx1024m -XX:+HeapDumpOnOutOfMemoryError
     restart: always
 
   db:
