@@ -42,7 +42,7 @@ variable "ami_id" {
 variable "instance_type" {
   description = "The type of EC2 instance to launch"
   type        = string
-  default     = "t2.micro"
+  default     = "t2.medium"
 }
 
 variable "allowed_ssh_cidr" {
