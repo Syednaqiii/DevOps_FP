@@ -21,9 +21,9 @@
           - python3-pip
         state: present
 
-    - name: Install Python requests library
+    - name: Install Python requests library (pinned version to avoid compatibility issues)
       pip:
-        name: requests
+        name: requests<2.22.29
         state: present
 
     - name: Start Docker service
