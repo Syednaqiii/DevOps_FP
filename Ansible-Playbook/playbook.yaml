@@ -1,4 +1,4 @@
----
+              ---
 - name: Configure EC2 instance with Docker, Docker Compose, Node.js, npm, Python 3, and pip
   hosts: ec2_instances
   become: yes
@@ -9,19 +9,23 @@
 
     - name: Install Node.js and npm using NodeSource
       shell: |
-        curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+        curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
         sudo apt-get install -y nodejs
 
-    - name: Install necessary packages including Docker, Docker Compose, Python 3, and pip
+    - name: Install necessary packages including Docker, Docker Compose, Python 3, pip, and requests
       apt:
-        name: "{{ item }}"
-        state: present
-        update_cache: yes
-      loop:
-        - docker.io
-        - docker-compose
-        - python3
-        - python3-pip
+      name:
+      - docker.io
+      - docker-compose
+      - python3
+      - python3-pip
+  state: present
+
+- name: Install Python requests library
+  pip:
+    name: requests
+    state: present
+
 
     - name: Start Docker service
       systemd:
@@ -43,3 +47,8 @@
       shell: |
         cd /home/ubuntu
         docker-compose up -d
+
+
+
+
+
