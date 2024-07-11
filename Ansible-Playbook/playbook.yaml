@@ -1,43 +1,67 @@
 ---
-- name: Configure EC2 instance with Docker, Docker Compose, Node.js, npm, Python 3, and pip
-  hosts: ec2_instances
+- name: Configure EC2 instance
+  hosts: all
   become: yes
   tasks:
-    - name: Update apt cache
-      apt:
-        update_cache: yes
-
-    - name: Install Node.js and npm using NodeSource
-      shell: |
-        curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-        sudo apt-get install -y nodejs
-
-    - name: Install necessary packages including Docker, Docker Compose, Python 3, and pip
-      apt:
-        name:
-          - docker.io
-          - docker-compose
-          - python3
-          - python3-pip
+    - name: Get Controlled Node Distribution
+      ansible.builtin.debug:
+        msg: "{{ ansible_distribution }} {{ ansible_distribution_version }}"
+    - name: Add new user
+      ansible.builtin.user:
+        name: web
+        password:
         state: present
-
-    - name: Start Docker service
-      systemd:
+        shell: /bin/bash
+        system: no
+    - name: Install Apache
+      ansible.builtin.command:
+        cmd: yum install -y httpd
+    - name: Enable and start httpd service
+      ansible.builtin.service:
+        name: httpd
+        enabled: yes
+        state: started
+    - name: Install PHP
+      ansible.builtin.command:
+        cmd: yum install -y php php-mysql
+    - name: Install Docker
+      ansible.builtin.command:
+        cmd: yum install -y docker
+    - name: Install pip
+      ansible.builtin.command:
+        cmd: yum install -y python3-pip
+    - name: Install Docker Compose
+      ansible.builtin.pip:
+        name: docker-compose
+        state: present
+    - name: Downgrade urllib3 to a compatible version
+      ansible.builtin.pip:
+        name: urllib3==1.26.15
+        state: present
+    - name: Start and enable Docker service
+      ansible.builtin.systemd:
         name: docker
         state: started
         enabled: yes
-
-    - name: Install npm packages globally
-      npm:
-        name: pm2
-        global: yes
-
+    - name: Add ec2-user to the docker group
+      ansible.builtin.user:
+        name: ec2-user
+        groups: docker
+        append: yes
     - name: Copy Docker Compose file
-      copy:
-        src: ./docker-compose.yaml
-        dest: /home/ubuntu/docker-compose.yaml
-
-    - name: Bring up Docker Compose services
-      shell: |
-        cd /home/ubuntu
-        docker-compose up -d
+      ansible.builtin.copy:
+        src: docker-compose.yml
+        dest: /home/ec2-user/docker-compose.yml
+        owner: ec2-user
+        group: ec2-user
+        mode: '0644'
+    - name: Verify Docker installation
+      ansible.builtin.shell:
+        cmd: sudo docker --version
+    - name: Verify Docker Compose installation
+      ansible.builtin.shell:
+        cmd: sudo /usr/local/bin/docker-compose --version
+    - name: Run Docker Compose
+      ansible.builtin.shell:
+        cmd: sudo /usr/local/bin/docker-compose up -d
+        chdir: /home/ec2-user
