@@ -21,11 +21,6 @@
           - python3-pip
         state: present
 
-    - name: Install Python requests library
-      pip:
-        name: requests<2.22.29
-        state: present
-
     - name: Start Docker service
       systemd:
         name: docker
