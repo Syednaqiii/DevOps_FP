@@ -19,12 +19,26 @@
           - docker-compose
           - python3
           - python3-pip
+      state: present
+
+    - name: Install Python 3 venv package
+      apt:
+        name: python3-venv
         state: present
 
-    - name: Install Python requests library (pinned version to avoid compatibility issues)
+    - name: Create Python virtual environment
+      command: python3 -m venv /path/to/your/venv
+      args:
+        creates: /path/to/your/venv/bin/activate
+      environment:
+        PATH: "{{ ansible_env.PATH }}:{{ venv_path }}/bin"
+        VIRTUAL_ENV: "{{ venv_path }}"
+
+    - name: Activate virtual environment and install requests
       pip:
         name: requests<2.22.29
-        state: present
+        executable: "{{ venv_path }}/bin/pip"
+        virtualenv: "{{ venv_path }}"
 
     - name: Start Docker service
       systemd:
