@@ -1,5 +1,5 @@
 - name: Configure EC2 instance with Docker, Docker Compose, Node.js, npm, Python 3, and pip
-  hosts: ec2_instances
+  hosts: ec2_instances,local
   become: yes
   tasks:
     - name: Update apt cache
