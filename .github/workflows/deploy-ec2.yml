@@ -86,22 +86,22 @@ jobs:
            echo "${{ secrets.AWS_SECRET_PRIV_KEY }}" > ./devOps-KP.pem
            chmod 400 ./devOps-KP.pem  
 
-      # - name: Run Ansible playbook with Inventory
-      #   run: |
-      #         ansible-playbook -i ./Inventory-Ansible/inventory.ini ./Ansible-Playbook/playbook.yaml
-      #   env:
-      #         ANSIBLE_PRIVATE_KEY_FILE: ./devOps-KP.pem
-      #         ANSIBLE_HOST_KEY_CHECKING: False
+      - name: Run Ansible playbook with Inventory
+        run: |
+              ansible-playbook -i ./Inventory-Ansible/inventory.ini ./Ansible-Playbook/playbook.yaml
+        env:
+              ANSIBLE_PRIVATE_KEY_FILE: ./devOps-KP.pem
+              ANSIBLE_HOST_KEY_CHECKING: False
           
       # - name: Wait for 1 minute
       #   run: sleep 360
 
-      - name: Destroy Terraform
-        working-directory: ./Terraform-Script
-        # env:
-        #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        #     AWS_REGION: ${{ secrets.AWS_REGION }}
-        run: terraform destroy -auto-approve
+      # - name: Destroy Terraform
+      #   working-directory: ./Terraform-Script
+      #   # env:
+      #   #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #   #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #   #     AWS_REGION: ${{ secrets.AWS_REGION }}
+      #   run: terraform destroy -auto-approve
  
 
