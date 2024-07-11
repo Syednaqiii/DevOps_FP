@@ -21,12 +21,18 @@
           - python3-pip
         state: present
 
-    - name: Install urllib3 with specific version using pip (user mode)
-      ansible.builtin.pip:
-        name: urllib3==1.26.15
-        state: present
-        executable: pip3
-        extra_args: --user
+    - name: Create a Python virtual environment
+      ansible.builtin.command:
+        cmd: python3 -m venv /home/ubuntu/myenv
+        creates: /home/ubuntu/myenv/bin/python
+
+    - name: Activate the virtual environment and install urllib3
+      ansible.builtin.command:
+        cmd: |
+          source /home/ubuntu/myenv/bin/activate && \
+          pip install urllib3==1.26.15
+        environment:
+          PATH: "{{ ansible_env.PATH }}:/home/ubuntu/myenv/bin"
 
     - name: Start Docker service
       systemd:
