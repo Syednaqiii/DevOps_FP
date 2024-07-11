@@ -16,11 +16,11 @@
     # - name: Install Apache
     #   ansible.builtin.command:
     #     cmd: yum install -y httpd
-    - name: Enable and start httpd service
-      ansible.builtin.service:
-        name: httpd
-        enabled: yes
-        state: started
+    # - name: Enable and start httpd service
+    #   ansible.builtin.service:
+    #     name: httpd
+    #     enabled: yes
+    #     state: started
     # - name: Install PHP
     #   ansible.builtin.command:
     #     cmd: yum install -y php php-mysql
