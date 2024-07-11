@@ -1,4 +1,4 @@
----
+              ---
 - name: Configure EC2 instance with Docker, Docker Compose, Node.js, npm, Python 3, and pip
   hosts: ec2_instances
   become: yes
