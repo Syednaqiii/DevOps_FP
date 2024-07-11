@@ -21,10 +21,12 @@
           - python3-pip
         state: present
 
-    - name: Downgrade urllib3 to a compatible version
+    - name: Install urllib3 with specific version using pip (user mode)
       ansible.builtin.pip:
         name: urllib3==1.26.15
         state: present
+        executable: pip3
+        extra_args: --user
 
     - name: Start Docker service
       systemd:
