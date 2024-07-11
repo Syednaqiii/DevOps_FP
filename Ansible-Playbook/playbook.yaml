@@ -28,12 +28,12 @@
         creates: /home/ubuntu/myenv/bin/python
 
     - name: Activate the virtual environment and install urllib3
-      ansible.builtin.command:
+      ansible.builtin.shell:
         cmd: |
           source /home/ubuntu/myenv/bin/activate && \
           pip install urllib3==1.26.15
-        environment:
-          PATH: "{{ ansible_env.PATH }}:/home/ubuntu/myenv/bin"
+        executable: /bin/bash
+        creates: /home/ubuntu/myenv/lib/python3.12/site-packages/urllib3-1.26.15.dist-info
 
     - name: Start Docker service
       systemd:
