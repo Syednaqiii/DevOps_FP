@@ -39,5 +39,4 @@
 
     - name: Bring up Docker Compose services
       shell: |
-        #cd /home/ubuntu
         docker-compose up -d
