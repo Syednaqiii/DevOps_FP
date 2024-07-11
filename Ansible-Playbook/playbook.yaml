@@ -13,17 +13,17 @@
         state: present
         shell: /bin/bash
         system: no
-    - name: Install Apache
-      ansible.builtin.command:
-        cmd: yum install -y httpd
+    # - name: Install Apache
+    #   ansible.builtin.command:
+    #     cmd: yum install -y httpd
     - name: Enable and start httpd service
       ansible.builtin.service:
         name: httpd
         enabled: yes
         state: started
-    - name: Install PHP
-      ansible.builtin.command:
-        cmd: yum install -y php php-mysql
+    # - name: Install PHP
+    #   ansible.builtin.command:
+    #     cmd: yum install -y php php-mysql
     - name: Install Docker
       ansible.builtin.command:
         cmd: yum install -y docker
@@ -45,15 +45,15 @@
         enabled: yes
     - name: Add ec2-user to the docker group
       ansible.builtin.user:
-        name: ec2-user
+        name: ubuntu
         groups: docker
         append: yes
     - name: Copy Docker Compose file
       ansible.builtin.copy:
-        src: docker-compose.yml
-        dest: /home/ec2-user/docker-compose.yml
-        owner: ec2-user
-        group: ec2-user
+        src: ./docker-compose.yml
+        dest: /home/ubuntu/docker-compose.yml
+        owner: ubuntu
+        group: ubuntu
         mode: '0644'
     - name: Verify Docker installation
       ansible.builtin.shell:
@@ -64,4 +64,4 @@
     - name: Run Docker Compose
       ansible.builtin.shell:
         cmd: sudo /usr/local/bin/docker-compose up -d
-        chdir: /home/ec2-user
+        chdir: /home/ubuntu
